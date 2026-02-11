@@ -53,16 +53,20 @@ export default {
             errorMessage.value = ''
             loading.value = true
             availableSlots.value = []
-            api.get("/appointments/slots", {params: {date: selectedDate.value}})
-            .then(res => {
-                availableSlots.value = res.data
-                loading.value = false
-            })
-            .catch(err => {
-                errorMessage.value = "Slot bulunamadı"
-                loading.value = false
-                console.log(err)
-            })
+            api.get("/appointments/slots", { params: { date: selectedDate.value } })
+  .then(res => {
+    console.log("selectedDate:", selectedDate.value);
+    console.log("slots:", res.data); // backend ne gönderiyor göreceğiz
+
+    availableSlots.value = res.data;
+  })
+  .catch(err => {
+    console.log("slots error:", err.response?.status, err.response?.data);
+  })
+  .finally(() => {
+    loading.value = false;
+  });
+
         }
 
         watch(selectedDate, () => {
