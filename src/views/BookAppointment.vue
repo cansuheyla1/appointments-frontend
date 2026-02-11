@@ -1,35 +1,38 @@
 
 <template>
-    <label>Uygun Saatler</label>
-    <input type="date" v-model="selectedDate" required>
+    <div class="page">
+        <label>Uygun Saatler</label>
+        <input type="date" min="today" v-model="selectedDate" required>
 
-    <p v-if="loading">Yükleniyor...</p>
-    <p v-if="errorMessage">{{ errorMessage }}</p>
+        <p v-if="loading">Yükleniyor...</p>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
 
-    <ul v-if="availableSlots && availableSlots.length">
-        <li v-for="slot in availableSlots" :key="slot">
-            <button @click="selectedTime = slot" :class="{selected: selectedTime === slot}">
-                {{ slot }}
-            </button>
-        </li>
-    </ul>
-    <p v-else-if="selectedDate && !loading && !errorMessage">Bu tarih için uygun saat bulunamadı.</p>
+        <ul v-if="availableSlots && availableSlots.length">
+            <li v-for="slot in availableSlots" :key="slot">
+                <button @click="selectedTime = slot" :class="{selected: selectedTime === slot}">
+                    {{ slot }}
+                </button>
+            </li>
+        </ul>
+        <p v-else-if="selectedDate && !loading && !errorMessage">Bu tarih için uygun saat bulunamadı.</p>
 
-    <p v-if="selectedTime">Seçilen saat: {{ selectedTime }}</p>
+        <p v-if="selectedTime">Seçilen saat: {{ selectedTime }}</p>
 
-    <div v-if="selectedTime">
-        <label>Ad Soyad: </label>
-        <input type="text" v-model="name" required>
-        <label>Email: </label>
-        <input type="text" v-model="email" required>
-        <label>Not: </label>
-        <textarea name="not" v-model="note"></textarea>
+        <div v-if="selectedTime">
+            <label>Ad Soyad: </label>
+            <input type="text" v-model="name" required>
+            <label>Email: </label>
+            <input type="text" v-model="email" required>
+            <label>Not: </label>
+            <textarea name="not" v-model="note"></textarea>
+        </div>
+        <p v-if="successMessage">{{ successMessage }}</p>
+
+        <button @click="createAppointment" :disabled="!selectedTime || loading || !selectedDate || !name || !email">
+            Randevu Oluştur
+        </button>
     </div>
-    <p v-if="successMessage">{{ successMessage }}</p>
-
-    <button @click="createAppointment" :disabled="!selectedTime || loading || !selectedDate || !name || !email">
-        Randevu Oluştur
-    </button>
+    
 </template>
 
 <script>
@@ -48,6 +51,7 @@ export default {
         let email = ref('')
         let note = ref('')
         let successMessage = ref('')
+        const today = new Date().toISOString().slice(0,10);
 
         const fetchSlots = () => {
             errorMessage.value = ''
@@ -101,7 +105,7 @@ export default {
 
 
         return {selectedDate, availableSlots, loading, errorMessage, selectedTime, 
-            name, email, note, successMessage, createAppointment}
+            name, email, note, successMessage, createAppointment, today}
     }
 }
 </script>
