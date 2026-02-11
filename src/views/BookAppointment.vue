@@ -53,6 +53,8 @@ export default {
             errorMessage.value = ''
             loading.value = true
             availableSlots.value = []
+            console.log("API BASE:", api.defaults.baseURL);
+
             api.get("/appointments/slots", { params: { date: selectedDate.value } })
   .then(res => {
     console.log("selectedDate:", selectedDate.value);
